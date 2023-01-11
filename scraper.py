@@ -26,18 +26,25 @@ class Scraper:
         numpy_routine_urls = [self.BASE_URL + li.find('a')['href'] for li in numpy_routines_html]
 
         numpy_functions_urls = []
-        for url in numpy_routine_urls:
+        for url_index, url in enumerate(numpy_routine_urls):
+            print(f'Gathering {url}')
+            
             response = requests.get(url)
             soup = BeautifulSoup(response.content, 'html.parser')
-            numpy_functions = soup.find_all('li', {'class': 'toctree-l2 current active has-children'})[0]
-            numpy_functions = numpy_functions.find('ul')
-            numpy_functions = numpy_functions.find_all('li')
-            numpy_functions_urls += [self.BASE_URL + func.find('a')['href'] for func in numpy_functions]
-            
-            break
+            try:
+                numpy_functions = soup.find_all('li', {'class': 'toctree-l2 current active has-children'})[0]
+            except IndexError:
+                numpy_functions_urls += [url]
+            else:
+                numpy_functions = numpy_functions.find('ul')
+                numpy_functions = numpy_functions.find_all('li')
+                numpy_functions_urls += [self.BASE_URL + func.find('a')['href'] for func in numpy_functions]
+
+            print(f'Completed {url_index + 1} / {len(numpy_routine_urls)}\n')
             self.pause()
             
-        print(numpy_functions_urls)
+        with open('numpy_functions_urls.txt', 'w') as f:
+            f.write(''.join([elem + '\n' for elem in numpy_functions_urls]))
         
         
         
@@ -45,4 +52,7 @@ class Scraper:
         
 print('\n' * 100)
 s = Scraper()
-print(s.get_routine_urls())
+s.get_function_urls()
+
+
+# C types giving error
