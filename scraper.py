@@ -45,6 +45,19 @@ class Scraper:
             
         with open('numpy_functions_urls.txt', 'w') as f:
             f.write(''.join([elem + '\n' for elem in numpy_functions_urls]))
+
+    def get_text_and_labels(self, url):
+        response = requests.get(url)
+        soup = BeautifulSoup(response.content, 'html.parser')
+        
+        data = {
+            'label': soup.find('h1').text[:-1],
+            'text': soup.find('dl').find('p').text,
+            'example': soup.find('pre')
+        }
+
+        return data
+
         
         
         
@@ -52,7 +65,8 @@ class Scraper:
         
 print('\n' * 100)
 s = Scraper()
-s.get_function_urls()
-
-
-# C types giving error
+with open('numpy_functions_urls.txt', 'r') as f:
+    urls = f.read().splitlines()
+    for url in urls[:1]:
+        print(s.get_text_and_labels(url))
+    
