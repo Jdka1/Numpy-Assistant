@@ -7,6 +7,7 @@ import requests
 from bs4 import BeautifulSoup
 import time
 import random
+import pandas as pd
 
 
 class Scraper:
@@ -15,7 +16,7 @@ class Scraper:
         pass
     
     def pause(self):
-        time.sleep(random.uniform(1,2))
+        time.sleep(random.uniform(1,4))
     
     def get_function_urls(self):
         response = requests.get(self.BASE_URL + 'routines.html')
@@ -51,9 +52,9 @@ class Scraper:
         soup = BeautifulSoup(response.content, 'html.parser')
         
         data = {
-            'label': soup.find('h1').text[:-1],
-            'text': soup.find('dl').find('p').text,
-            'example': soup.find('pre')
+            'label': [soup.find('h1').text[:-1]],
+            'text': [soup.find('dl').find('p').text],
+            'example': [soup.find('pre')]
         }
 
         return data
@@ -62,11 +63,32 @@ class Scraper:
         
         
         
+
         
 print('\n' * 100)
 s = Scraper()
+
 with open('numpy_functions_urls.txt', 'r') as f:
     urls = f.read().splitlines()
-    for url in urls[:1]:
-        print(s.get_text_and_labels(url))
     
+data = pd.DataFrame(columns=['label', 'text', 'example'])
+
+for i, url in enumerate(urls):
+    try:
+        text_and_labels = s.get_text_and_labels(url)
+    except:
+        continue
+    else:
+        text_and_labels_df = pd.DataFrame.from_dict(text_and_labels, orient='columns')
+        data = pd.concat([data, text_and_labels_df])
+
+        print(f'Completed {i + 1} / {len(urls)}')
+
+        if i % 10 == 0:
+            data.to_csv('data.csv', index=False)
+
+            t = time.localtime()
+            print(f'Wrote to file at {time.strftime("%H:%M:%S", t)}')
+
+    s.pause()
+
