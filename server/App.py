@@ -11,7 +11,7 @@ app = Flask(__name__)
 def hello_world():
     if request.method == "POST":
         query = request.form["query"]
-        response = bot.ask(query)
+        response = bot.ask_dnn(query)
         return render_template('index.html', response=response)
     else:
         return render_template('index.html', response=None)

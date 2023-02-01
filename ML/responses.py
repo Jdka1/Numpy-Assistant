@@ -54,13 +54,9 @@ class Bot:
         label_map = {i: j for (i, j) in zip(range(0, len(df)), df['label'])}
         return label_map
 
-    def ask(self, query):
+    def ask_dnn(self, query):
         output = self.model(torch.FloatTensor(
                 self.vectorizer.transform([query]).toarray()
             ))
         pred_func = self.label_map[torch.argmax(output).item()]
         return pred_func
-
-
-bot = Bot()
-print(bot.ask('hello'))
