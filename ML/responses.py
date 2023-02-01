@@ -2,6 +2,8 @@ import torch
 import torch.nn as nn
 from sklearn.feature_extraction.text import CountVectorizer
 import pandas as pd
+from sklearn.cluster import KMeans
+
 
 
 class Network(nn.Module):
@@ -36,6 +38,7 @@ class Bot:
         self.model = self.load_model()
         self.vectorizer = self.fit_vectorizer()
         self.label_map = self.load_label_map()
+        self.kmeans = self.load_kmeans()
 
     def load_model(self):
         model = Network()
@@ -60,3 +63,5 @@ class Bot:
             ))
         pred_func = self.label_map[torch.argmax(output).item()]
         return pred_func
+
+
