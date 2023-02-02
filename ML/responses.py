@@ -38,7 +38,6 @@ class Bot:
         self.model = self.load_model()
         self.vectorizer = self.fit_vectorizer()
         self.label_map = self.load_label_map()
-        self.kmeans = self.load_kmeans()
 
     def load_model(self):
         model = Network()

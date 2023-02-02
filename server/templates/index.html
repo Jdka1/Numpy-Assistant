@@ -2,13 +2,16 @@
 <html>
     <head>
         <title>App</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     </head>
     <body>
-        <form action="#" method="post" autocomplete="off">
-            <label for="query">Input:</label><br>
-            <input type="text" id="query" name="query">
-        </form>
-        <h1>Response:</h1>
-        <p>{{response}}</p>
+        <div class="app">
+            <form action="#" method="post" autocomplete="off">
+                <label for="query">Input:</label><br>
+                <input type="text" id="query" name="query">
+            </form>
+            <h2>Response:</h2>
+            <a href="{{link}}" target="_blank"><h1>{{response}}</h1></a>
+        </div>
     </body>
 </html>

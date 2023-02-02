@@ -12,7 +12,8 @@ def hello_world():
     if request.method == "POST":
         query = request.form["query"]
         response = bot.ask_dnn(query)
-        return render_template('index.html', response=response)
+        link = f'https://numpy.org/doc/stable/reference/generated/{response}.html'
+        return render_template('index.html', response=response, link=link)
     else:
         return render_template('index.html', response=None)
 
